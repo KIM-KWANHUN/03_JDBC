@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static com.ohgiraffers.common.JDBCTemplate.close;
@@ -14,30 +16,28 @@ import static com.ohgiraffers.common.JDBCTemplate.getConnection;
 public class Application04 {
     public static void main(String[] args) {
 
-        /* title. Scanner 사용해서 사번을 입력받고, 해당 사번의 사원 정보를
-         *       EmployeeDTO 를 통해 객체에 담아서 출력 */
+        /* title. 전체 사원 정보를 EmployeeDTO 를 통해 객체에 담아서 출력 */
         // 1. 커넥션 만들기
         Connection con = getConnection();
         // 2. statement 객체 만들기
         Statement stmt = null;
         // 3. 결과를 담을 resultset 만들기
         ResultSet rset = null;
-        // 4. EmployeeDTO null로 초기화
+        // 회원 한 명의 정보를 담을 DTO
         EmployeeDTO emp = null;
-        // 5. 스캐너 생성
-        Scanner sc = new Scanner(System.in);
-        System.out.print("조회하실 사번을 입력해주세요 : ");
-        // 6. 스캐너 사번 입력
-        String empId = sc.nextLine();
+        // 한명의 정보들을 하나의 인스턴스로 묶기 위한 List
+        List<EmployeeDTO> empList = null;
         // 7. 쿼리문 작성
-        String query = "SELECT * FROM EMPLOYEE WHERE EMP_ID = '" + empId + "'";
+        String query = "SELECT * FROM EMPLOYEE";
         // 8. 예외처리
         try {
             stmt = con.createStatement();
             // 9. rset 에 결과 담기
             rset = stmt.executeQuery(query);
+            
+            empList = new ArrayList<>(); // 인스턴스 생성
             // 10. 조회한 결과를 객체에 담기
-            if (rset.next()) {
+            while(rset.next()) {
                 emp = new EmployeeDTO();
 
                 emp.setEmpId(rset.getString("EMP_ID"));
@@ -54,6 +54,8 @@ public class Application04 {
                 emp.setHireDate(rset.getDate("HIRE_DATE"));
                 emp.setEntDate(rset.getDate("ENT_DATE"));
                 emp.setEntYn(rset.getString("ENT_YN"));
+                
+                empList.add(emp);
             }
 
         } catch (SQLException e) {
@@ -63,7 +65,9 @@ public class Application04 {
             close(stmt);
             close(con);
         }
-        System.out.println("emp = " + emp);
+        for(EmployeeDTO oneEmployee : empList) {
+            System.out.println("oneEmployee = " + oneEmployee);
+        }
 
     }
 }
