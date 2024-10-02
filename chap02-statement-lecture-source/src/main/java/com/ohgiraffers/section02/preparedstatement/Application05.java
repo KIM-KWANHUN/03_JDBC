@@ -94,6 +94,7 @@ public class Application05 {
 
         for(EmployeeDTO empDto : emplist) {
             System.out.println("empDto = " + empDto);
+            
         }
     }
 }
