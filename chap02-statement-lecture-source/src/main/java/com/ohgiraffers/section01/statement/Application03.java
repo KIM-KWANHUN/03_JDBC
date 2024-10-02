@@ -17,7 +17,7 @@ public class Application03 {
 
         /* title. Scanner 사용해서 사번을 입력받고, 해당 사번의 사원 정보를
         *       EmployeeDTO 를 통해 객체에 담아서 출력 */
-    // 1. 커넥션 만들기
+        // 1. 커넥션 만들기
         Connection con = getConnection();
         // 2. statement 객체 만들기
         Statement stmt = null;
